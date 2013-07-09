@@ -1,0 +1,30 @@
+{
+  "name": "slider-lite",
+  "version": "0.1.0",
+  "description": "A jquery plugin slider",
+  "dependencies": {
+    "grunt":"*",
+    "grunt-coffee": "0.0.6",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-watch": "~0.4.4",
+    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-uglify": "~0.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hellocreep/slider-lite.git"
+  },
+  "keywords": [
+    "jquery",
+    "slider"
+  ],
+  "author": "lea",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "63e23252fa67fb39471d8dfc9d1d86d6e00bc04c"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "slider-lite",
+  "version": "0.1.0",
+  "main": "js/slide.jquery.js",
+  "dependencies": {
+    "jquery": "~2.0.3"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
