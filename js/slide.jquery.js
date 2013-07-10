@@ -70,8 +70,6 @@ var Slide = (function() {
                 self.autoplay();
             });
 
-            console.log(self.conf)
-
             self.autoplay(); 
             self.nav();
             return self;

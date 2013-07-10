@@ -6,8 +6,8 @@ module.exports = function(grunt) {
 		uglify:{
 			options:{},
 			build: {
-				src: 'js/*.js',
-				dest: 'js-build/*.js'
+				src: 'js/slide.jquery.js',
+				dest: 'js/slide.jquery.min.js'
 			}
 		},
 		watch:{
