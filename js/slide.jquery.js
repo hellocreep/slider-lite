@@ -15,20 +15,18 @@ var Slide = (function() {
             i_width: $target.find('.item').width(),
             i_height: $target.find('.item').height()
         }
-
         this.init(conf, $target);
     }
     Slide.prototype = {
         init: function(conf, target) {
             var self = this,
-                prop_done = {},
-                prop_active = {},
-                prop_ready = {},
-                prop_neg_done = {},
-                prop_neg_ready = {},
-                prop_neg_active = {};
+                prop = {},
+                neg_prop = {};
 
-            self.conf = $.extend({}, self.defaults, conf);
+            self.conf = $.extend({
+                ani_prop: [],
+                ani_neg_prop: [] 
+            }, self.defaults, conf);
             self.target = target;
 
             var direction = self.conf.direction,
@@ -56,25 +54,23 @@ var Slide = (function() {
                     break;
             }
             
-            prop_neg_done[neg_direction] = '-' + offset
-            prop_neg_ready[neg_direction] = offset;
-            prop_neg_active[neg_direction] = 0;
-            self.conf.prop_neg_done = prop_neg_done;
-            self.conf.prop_neg_ready = prop_neg_ready;
-            self.conf.prop_neg_active = prop_neg_active;
-
-            prop_done[direction] = '-' + offset;//'-100%';
-            prop_ready[direction] = offset;//'100%';
-            prop_active[direction] = 0;
-            self.conf.prop_done = prop_done;
-            self.conf.prop_ready = prop_ready;
-            self.conf.prop_active = prop_active;
+            var prop_list = ['-'+offset, offset, 0];
+            for(var i = 0; i < prop_list.length; i++) {
+                prop[direction] = prop_list[i];
+                neg_prop[neg_direction] = prop_list[i];
+                self.conf.ani_prop.push(prop);
+                self.conf.ani_neg_prop.push(neg_prop);
+                prop = {};
+                neg_prop = {};
+            }
 
             self.target.hover(function() {
                 self.stop();
             }, function() {
                 self.autoplay();
             });
+
+            console.log(self.conf)
 
             self.autoplay(); 
             self.nav();
@@ -136,13 +132,13 @@ var Slide = (function() {
                 $target = self.target;
 
             if(type == 'prev') {
-                var prop_done = conf.prop_neg_done,
-                    prop_active = conf.prop_neg_active,
-                    prop_ready = conf.prop_neg_ready;
+                var prop_done = conf.ani_neg_prop[0],
+                    prop_ready = conf.ani_neg_prop[1],
+                    prop_active = conf.ani_neg_prop[2];
             } else {
-                var prop_done = conf.prop_done,
-                    prop_active = conf.prop_active,
-                    prop_ready = conf.prop_ready;
+                var prop_done = conf.ani_prop[0],
+                    prop_ready = conf.ani_prop[1],
+                    prop_active = conf.ani_prop[2];
             }
             // 重置style中的 left|right|top|bottom，否则动画效果无法实现
             $target.find('.item').eq(current)
