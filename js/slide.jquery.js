@@ -1,5 +1,3 @@
-// TODO
-// 点击前进后退按钮时，必须等这次动画结束之后才能再次点击
 var Slide = (function() {
     function Slide(conf, target) {
         var $target = $(target);
@@ -79,7 +77,7 @@ var Slide = (function() {
                 conf = self.conf,
                 $target = self.target;
 
-            if(!conf.autoplay) return false;
+            if(!conf.autoplay || conf.items_length < 2) return false;
 
             self.timer = setInterval(function() {
 
@@ -167,6 +165,7 @@ var Slide = (function() {
 
             $target.find('.slide-nav').on('click', function(e) {
                 e.preventDefault();
+                if($target.find('.item:animated').length > 0) return false;
                 var $this = $(this);
                 if($this.hasClass('prev')) {
                     self.prev();
