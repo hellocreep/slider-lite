@@ -16,6 +16,7 @@ A simple jquery-plugin slider
    display: none;
    position: absolute;
    width: 100%;
+   height: 100%;
 }
 .slide .item.active {
     display: block;
