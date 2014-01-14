@@ -11,7 +11,6 @@
 
     Slide.prototype = {
         constructor: Slide,
-
         init: function(conf, target) {
             var self = this,
                 items = target.find(conf.itemClass),
@@ -186,8 +185,8 @@
         return this.each(function() {
             var $this = $(this), 
                 data = $(this).data('slide'),
-                conf = $.extend({}, $.fn.slide.defaults, $(this).data(), typeof conf == 'object' && conf);
-            if(!data) $this.data('slide', (data = new Slide(this, conf)));
+                opts = $.extend({}, $.fn.slide.defaults, $this.data(), typeof conf == 'object' && conf);
+            if(!data) $this.data('slide', (data = new Slide(this, opts)));
         });
     }
 
