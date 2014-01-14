@@ -1,33 +1,35 @@
-var Slide = (function() {
-    function Slide(conf, target) {
-        var $target = $(target);
-        this.defaults = {
-            speed: 0.8,
-            delay: 3,
-            direction: 'left',
-            easing: 'swing',
-            start: 0, 
-            next: 1,
-            autoplay: true,
-            items_length: $target.find('.item').length,
-            i_width: $target.find('.item').width(),
-            i_height: $target.find('.item').height()
-        }
-        this.init(conf, $target);
+(function(factory) {
+    if(typeof define === 'function') {
+        define(['jquery'], factory);
+    } else {
+        factory(jQuery);
+    }  
+})(function($) {
+    var Slide = function (target, conf) {
+        this.init(conf, $(target));
     }
+
     Slide.prototype = {
+        constructor: Slide,
+
         init: function(conf, target) {
             var self = this,
+                items = target.find(conf.itemClass),
                 prop = {},
                 neg_prop = {};
 
             self.conf = $.extend({
+                items_length: items.length,
+                i_width: items.width(),
+                i_height: items.height(),
                 ani_prop: [],
                 ani_neg_prop: [] 
-            }, self.defaults, conf);
+            }, conf);
+
             self.target = target;
 
-            var direction = self.conf.direction,
+            var conf = self.conf,
+                direction = conf.direction,
                 neg_direction,
                 offset;
 
@@ -36,24 +38,24 @@ var Slide = (function() {
             switch(direction) {
                 case 'left':
                     neg_direction = 'right';
-                    offset = self.conf.i_width;
+                    offset = conf.i_width;
                     break;
                 case 'right':
                     neg_direction = 'left';
-                    offset = self.conf.i_width;
+                    offset = conf.i_width;
                     break;
                 case 'top':
                     neg_direction = 'bottom';
-                    offset = self.conf.i_height;
+                    offset = conf.i_height;
                     break;
                 case 'bottom':
                     neg_direction = 'top';
-                    offset = self.conf.i_height;
+                    offset = conf.i_height;
                     break;
             }
             
             var prop_list = ['-'+offset, offset, 0];
-            for(var i = 0; i < prop_list.length; i++) {
+            for(var i = 0, len = prop_list.length; i < len; i++) {
                 prop[direction] = prop_list[i];
                 neg_prop[neg_direction] = prop_list[i];
                 self.conf.ani_prop.push(prop);
@@ -62,7 +64,7 @@ var Slide = (function() {
                 neg_prop = {};
             }
 
-            self.target.hover(function() {
+            target.hover(function() {
                 self.stop();
             }, function() {
                 self.autoplay();
@@ -127,7 +129,7 @@ var Slide = (function() {
                 conf = self.conf,
                 $target = self.target;
 
-            if(type == 'prev') {
+            if(type === 'prev') {
                 var prop_done = conf.ani_neg_prop[0],
                     prop_ready = conf.ani_neg_prop[1],
                     prop_active = conf.ani_neg_prop[2];
@@ -137,7 +139,7 @@ var Slide = (function() {
                     prop_active = conf.ani_prop[2];
             }
             // 重置style中的 left|right|top|bottom，否则动画效果无法实现
-            $target.find('.item').eq(current)
+            $target.find(conf.itemClass).eq(current)
                 .css({left:'', right:'',top: '', bottom: ''})
                 .animate(prop_done, {
                     easing: conf.easing,
@@ -146,7 +148,7 @@ var Slide = (function() {
                     }
                 });
 
-            $target.find('.item').eq(next)
+            $target.find(conf.itemClass).eq(next)
                 .css({left:'', right:'',top: '', bottom: ''})
                 .css(prop_ready).show()
                 .animate(prop_active, {
@@ -163,9 +165,9 @@ var Slide = (function() {
                 conf = self.conf,
                 $target = self.target;
 
-            $target.find('.slide-nav').on('click', function(e) {
+            $target.find(conf.navClass).on('click', function(e) {
                 e.preventDefault();
-                if($target.find('.item:animated').length > 0) return false;
+                if($target.find(conf.itemClass + ':animated').length > 0) return false;
                 var $this = $(this);
                 if($this.hasClass('prev')) {
                     self.prev();
@@ -178,11 +180,26 @@ var Slide = (function() {
             var self = this;
             clearInterval(self.timer);
         }
-
     }
-    return Slide;
-})();
 
-$.fn.slide = function(conf) {
-    return new Slide(conf, this);
-}
+    $.fn.slide = function(conf) {
+        return this.each(function() {
+            var $this = $(this), 
+                data = $(this).data('slide'),
+                conf = $.extend({}, $.fn.slide.defaults, $(this).data(), typeof conf == 'object' && conf);
+            if(!data) $this.data('slide', (data = new Slide(this, conf)));
+        });
+    }
+
+    $.fn.slide.defaults = {
+        speed: 0.8,
+        delay: 3,
+        direction: 'left',
+        easing: 'swing',
+        start: 0, 
+        next: 1,
+        autoplay: true,
+        itemClass: '.item',
+        navClass: '.slide-nav'
+    }
+});
